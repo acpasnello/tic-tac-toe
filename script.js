@@ -30,8 +30,8 @@ const gameboard = (() => {
     }
 
     function placeToken(row, col, selection) {
-        if (board[row][col] == "") {
-            board[row][col] = selection;
+        if (board[row][col].getValue() == "") {
+            board[row][col].addToken(selection);
             return true;
         } else {
             return false;
@@ -63,7 +63,6 @@ const PlayerFactory = (name, token) => {
 
 // Module to control the flow of the game
 const gameController = (() => {
-    const board = gameboard();
 
     let playerOne = PlayerFactory("Player One", "x");
     let playerTwo = PlayerFactory("Player Two", "o");
@@ -80,26 +79,31 @@ const gameController = (() => {
     // Check for rows, diagonals, columns
     const checkForWin = () => {
         for (let i = 0; i < rows; i++) {
-            if (board.getTile(i, 0) === board.getTile(i, 1) === board.getTile(i, 2)) {
+            if (gameboard.getTile(i, 0) === gameboard.getTile(i, 1) === gameboard.getTile(i, 2)) {
                 // Row
-                winner = board[i][0]
-            } else if ((i = 0 && (board[i][0] === board[i + 1][1]) === board[i + 2][2])) {
+                winner = gameboard.getTile(i, 0)
+            } else if (i = 0 && (gameboard.getTile(i, 0) === gameboard.getTile(i + 1, 1) === gameboard.getTile(i + 2, 2))) {
                 // Diagonal from top left
-                winner = board[i][0]
-            } else if ((i = 2 && (board[i][0] === board[i - 1][1]) === board[i - 2][2])) {
+                winner = gameboard.getTile(i, 0)
+            } else if (i = 2 && (gameboard.getTile(i, 0) === gameboard.getTile(i - 1, 1) === gameboard.getTile(i - 2, 2))) {
                 //Diagonal from bottom left
-                winner = board[i][0]
-            } else if (board)
+                winner = gameboard.getTile(i, 0)
+            } else if (gameboard.getTile(0, i) === gameboard.getTile(1, i) === gameboard.getTile(2, i)) {
+                winner = gameboard.getTile(0, i)
+            } else { winner = false; }
         }
         return winner;
     }   
-    
+
     const playRound = (row, col) => {
         // Check tile is empty
-        board.placeToken(row, col, activePlayer.getToken())
+        gameboard.placeToken(row, col, activePlayer.getToken())
         // Update Tile
         // Check for line
-        checkForWin();
+        winner = checkForWin();
+        if (winner) {
+            return;
+        }
         // Switch player
         _changeActivePlayer();
     }
