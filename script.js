@@ -83,39 +83,58 @@ const gameController = (() => {
     
     // Check for rows, diagonals, columns
     const checkForWin = () => {
-        const winner = false;
+        let winner = false;
         for (let i = 0; i < 3; i++) {
-            if (gameboard.getTile(i, 0) === gameboard.getTile(i, 1) === gameboard.getTile(i, 2)) {
+            if ((gameboard.getTile(i, 0) === gameboard.getTile(i, 1)) && (gameboard.getTile(i, 1) === gameboard.getTile(i, 2))) {
                 // Row
-                winner = gameboard.getTile(i, 0)
-            } else if (gameboard.getTile(0, i) === gameboard.getTile(1, i) === gameboard.getTile(2, i)) {
-                winner = gameboard.getTile(0, i)
-            } else if (i = 0) {
-                if (gameboard.getTile(i, 0) === gameboard.getTile(i + 1, 1) === gameboard.getTile(i + 2, 2)) {
-                    // Diagonal from top left
+                if (gameboard.getTile(i,0) != "") {
                     winner = gameboard.getTile(i, 0)
-                }
-            } else if (i = 2) { 
-                if (gameboard.getTile(i, 0) === gameboard.getTile((i - 1), 1) === gameboard.getTile((i - 2), 2)) {
-                    //Diagonal from bottom left
-                    winner = gameboard.getTile(i, 0)
-                }
-            } else { winner = false; }
+                    break;
+                } else { continue }      
+            } else if ((gameboard.getTile(0, i) === gameboard.getTile(1, i)) && (gameboard.getTile(1, i) === gameboard.getTile(2, i))) {
+                // Column
+                if (gameboard.getTile(0,i) != "") {
+                    winner = gameboard.getTile(0, i)
+                    break;
+                } else { continue }
+            }
+        }
+        if ((gameboard.getTile(0, 0) === gameboard.getTile(1, 1)) && (gameboard.getTile(1, 1) === gameboard.getTile(2, 2))) {
+            // Diagonal from top left
+            if (gameboard.getTile(0,0) != "") {
+                winner = gameboard.getTile(0, 0)
+            }
+        }
+        if ((gameboard.getTile(2, 0) === gameboard.getTile(1, 1)) && (gameboard.getTile(1, 1) === gameboard.getTile(0, 2))) {
+            //Diagonal from bottom left
+            if (gameboard.getTile(2,0) != ""){
+                winner = gameboard.getTile(2, 0)
+            }
         }
         return winner;
     }   
 
+    let turn = 0;
+    let winner = false;
     const playRound = (row, col) => {
         // Attempt to play tile
         gameboard.placeToken(row, col, activePlayer.getToken())
         // Check for line
-        winner = checkForWin();
+        if (turn > 3) {
+            winner = checkForWin();
+        } else {
+            turn++;
+        }
+        
         if (winner) {
             // End of Game
-            return;
+            // Need some way to reset game
+
+            return true;
         } else {
             // Switch player
             _changeActivePlayer();
+            return false;
         }
     }
 
