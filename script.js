@@ -147,3 +147,5 @@ const gameController = (() => {
 const displayController = (() => {
     
 })();
+
+module.exports = gameboard, gameController.checkForWin;
