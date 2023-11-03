@@ -138,8 +138,6 @@ const gameController = (() => {
         }
     }
 
-    
-
     return {playRound, getActivePlayer}
 })();
 
@@ -148,4 +146,4 @@ const displayController = (() => {
     
 })();
 
-module.exports = gameboard, gameController.checkForWin;
+module.exports = { gameboard, gameController, checkForWin };
