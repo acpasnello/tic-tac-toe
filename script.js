@@ -143,7 +143,27 @@ const gameController = (() => {
 
 // DisplayController Module - control the display of the game
 const displayController = (() => {
-    
+    const game = gameController()
+    const boardDiv = document.querySelector(".board")
+    const updateScreen = () => {
+        // Clear board
+        boardDiv.textContent = "";
+        // Get current board and player
+        const board = game.getBoard();
+        const activePlayer = game.getActivePlayer();
+        // Render each tile
+        board.forEach(row => {
+            rowIndex = index;
+            row.forEach((cell, rowIndex, index) => {
+                const tileButton = document.createElement('button');
+                tileButton.dataset.row = rowIndex;
+                tileButton.dataset.column = index;
+                tileButton.classList.add('tile');
+                tileButton.textContent = cell.getValue();
+                boardDiv.appendChild(tileButton);
+            })
+        });
+    }
 })();
 
 module.exports = { gameboard, gameController };
