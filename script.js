@@ -10,31 +10,33 @@ const gameboard = (() => {
             board[i].push(Cell());
         }
     }
-
+    console.log(board)
     const getBoard = () => board;
 
     function Cell() {
         let value = "";
 
         const addToken = (player) => {
+            console.log('addToken')
             value = player;
         };
 
         const getValue = () => value;
 
-        return { addToken, getValue };
+        return { addToken, getValue, value };
     }
 
     const getTile = (row, col) => {
         if (row < 0 || row > 2 || col < 0 || col > 2) {return null}
         tile = board[row][col].getValue()
         return tile;
-        // return board[row][col].getValue();
     }
 
     function placeToken(row, col, selection) {
+        console.log("Value: " + board[row][col].getValue())
         if (board[row][col].getValue() == "") {
             board[row][col].addToken(selection);
+            console.log('Token placed at ' + row + ', ' + col + '[row, col]')
             return true;
         } else {
             return false;
@@ -43,7 +45,12 @@ const gameboard = (() => {
 
     function printBoard () {
         const boardWithValues = board.map((row) => row.map((cell) => cell.getValue()))
+        console.log('printBoard')
         console.log(boardWithValues)
+    }
+
+    const resetGame = () => {
+        
     }
 
     return { getTile, getBoard, placeToken, printBoard };
@@ -84,18 +91,21 @@ const gameController = (() => {
     // Check for rows, diagonals, columns
     const checkForWin = () => {
         let winner = false;
+        console.log('checkForWin')
         for (let i = 0; i < 3; i++) {
             if ((gameboard.getTile(i, 0) === gameboard.getTile(i, 1)) && (gameboard.getTile(i, 1) === gameboard.getTile(i, 2))) {
                 // Row
                 if (gameboard.getTile(i,0) != "") {
                     winner = gameboard.getTile(i, 0)
-                    break;
+                    console.log(winner)
+                    return winner;
                 } else { continue }      
             } else if ((gameboard.getTile(0, i) === gameboard.getTile(1, i)) && (gameboard.getTile(1, i) === gameboard.getTile(2, i))) {
                 // Column
                 if (gameboard.getTile(0,i) != "") {
                     winner = gameboard.getTile(0, i)
-                    break;
+                    console.log(winner)
+                    return winner;
                 } else { continue }
             }
         }
@@ -103,14 +113,19 @@ const gameController = (() => {
             // Diagonal from top left
             if (gameboard.getTile(0,0) != "") {
                 winner = gameboard.getTile(0, 0)
+                console.log('Winner: ' + winner)
+                return winner;
             }
         }
         if ((gameboard.getTile(2, 0) === gameboard.getTile(1, 1)) && (gameboard.getTile(1, 1) === gameboard.getTile(0, 2))) {
             //Diagonal from bottom left
             if (gameboard.getTile(2,0) != ""){
                 winner = gameboard.getTile(2, 0)
+                console.log(winner)
+                return winner;
             }
         }
+        console.log('returning winner: ')
         return winner;
     }   
 
@@ -122,19 +137,36 @@ const gameController = (() => {
         // Check for line
         if (turn > 3) {
             winner = checkForWin();
+            console.log('playRound, ' + winner)
         } else {
             turn++;
         }
-        
+
         if (winner) {
             // End of Game
+            const tiles = document.getElementsByClassName('tile');
+            // tiles.forEach(tile => {
+            //     tile.style.display = "none"
+            // });
+            for (var i=0; i < tiles.length; i++){
+                tiles[i].style.display = "none";
+            }
+            let winScreen = document.createElement('div')
+            winScreen.classList.add('gameWon')
+            winScreen.innerHTML = `
+                <p>Winner!! x wins</p>
+                <button>New Game</button>
+            `
+
+            let boardDiv = document.querySelector('div.board')
+            boardDiv.appendChild(winScreen)
             // Need some way to reset game
 
             return true;
         } else {
             // Switch player
             _changeActivePlayer();
-            return false;
+            return false;       `   `
         }
     }
 
@@ -143,27 +175,43 @@ const gameController = (() => {
 
 // DisplayController Module - control the display of the game
 const displayController = (() => {
-    const game = gameController()
+    // const game = gameController()
     const boardDiv = document.querySelector(".board")
     const updateScreen = () => {
         // Clear board
         boardDiv.textContent = "";
         // Get current board and player
-        const board = game.getBoard();
-        const activePlayer = game.getActivePlayer();
+        const board = gameboard.getBoard();
+        console.log(board)
+        const activePlayer = gameController.getActivePlayer();
         // Render each tile
-        board.forEach(row => {
-            rowIndex = index;
-            row.forEach((cell, rowIndex, index) => {
+        for (let i = 0; i < board.length; i++) {
+            for(let j = 0; j < board[i].length; j++) {
                 const tileButton = document.createElement('button');
-                tileButton.dataset.row = rowIndex;
-                tileButton.dataset.column = index;
+                tileButton.dataset.row = i;
+                tileButton.dataset.column = j;
                 tileButton.classList.add('tile');
-                tileButton.textContent = cell.getValue();
+                tileButton.textContent = board[i][j].getValue();
                 boardDiv.appendChild(tileButton);
-            })
-        });
+            }
+        }
     }
+
+    // Add event listener to board
+    function clickHandlerBoard(e) {
+        const selectedRow = e.target.dataset.row;
+        const selectedColumn = e.target.dataset.column;
+
+        if (!selectedColumn || !selectedRow) return;
+
+        round = gameController.playRound(selectedRow, selectedColumn);
+        // I dont remember what this was gonna do
+        if (!round) {updateScreen()}
+        // else { updateScreen()}
+    }
+    boardDiv.addEventListener('click', clickHandlerBoard);
+
+    updateScreen();
 })();
 
-module.exports = { gameboard, gameController };
+// displayController();

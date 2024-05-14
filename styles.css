@@ -3,18 +3,39 @@ body {
 }
 .board {
     border: 1px solid black;
-    padding: 8px;
+    border-radius: 8px;
+    padding: 6px;
     display: grid;
-    grid-template-columns: repeat(3, minmax(100px, 1fr));
+    grid-template-columns: repeat(3, minmax(100px, 300px));
     grid-auto-rows: 100px;
 }
 
 .tile {
     border: 1px solid #646464;
+    border-radius: 8px;
+    min-height: 50px;
+    margin: 2px;
+}
+
+.gameWon {
+    z-index: 2;
+    grid-column: 1 / 4;
+    grid-row: 1 / 4;
+    background-color: slateblue;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    padding: 100px;
 }
 
 @media screen and (min-width: 800px) {
     .board {
         max-width: 800px;
+        grid-auto-rows: 200px;
+    }
+
+    .gameWon {
+        max-width: 800px;
+        height: 400px;
     }
 }
