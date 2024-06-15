@@ -133,41 +133,53 @@ const gameController = (() => {
     let winner = false;
     const playRound = (row, col) => {
         // Attempt to play tile
-        gameboard.placeToken(row, col, activePlayer.getToken())
-        // Check for line
-        if (turn > 3) {
-            winner = checkForWin();
-            console.log('playRound, ' + winner)
-        } else {
-            turn++;
-        }
+        let placed = gameboard.placeToken(row, col, activePlayer.getToken())
+        console.log('placed: ' + placed)
+        if (placed) {
+            // Check for line
+            if (turn > 3) {
+                winner = checkForWin();
+                console.log('playRound, ' + winner)
+                if (winner) {
+                    console.log('winner loop')
+                    // End of Game
+                    const tiles = document.getElementsByClassName('tile');
+                    for (var i=0; i < tiles.length; i++){
+                        tiles[i].style.display = "none";
+                    }
+                    let winScreen = document.createElement('div')
+                    winScreen.classList.add('gameWon')
+                    winScreen.innerHTML = `
+                        <p>Winner!! ${winner} wins</p>
+                        <button class="newGame">New Game</button>
+                    `
+                    let boardDiv = document.querySelector('div.board')
+                    boardDiv.appendChild(winScreen)
+                    // Need some way to reset game
 
-        if (winner) {
-            // End of Game
-            const tiles = document.getElementsByClassName('tile');
-            // tiles.forEach(tile => {
-            //     tile.style.display = "none"
-            // });
-            for (var i=0; i < tiles.length; i++){
-                tiles[i].style.display = "none";
+                    return "won";
+                } else {
+                    turn++;
+                    // Switch player
+                    _changeActivePlayer();
+                    return false;
+                }
+            } else {
+                turn++;
+                _changeActivePlayer();
+                return false;
             }
-            let winScreen = document.createElement('div')
-            winScreen.classList.add('gameWon')
-            winScreen.innerHTML = `
-                <p>Winner!! x wins</p>
-                <button>New Game</button>
-            `
 
-            let boardDiv = document.querySelector('div.board')
-            boardDiv.appendChild(winScreen)
-            // Need some way to reset game
-
-            return true;
+             
         } else {
-            // Switch player
-            _changeActivePlayer();
-            return false;       `   `
+            // Token not placed
+            return "spot taken"
         }
+    }
+
+    // Reset all tiles 
+    const newGame = () => {
+
     }
 
     return {playRound, getActivePlayer}
@@ -197,6 +209,15 @@ const displayController = (() => {
         }
     }
 
+    const tileTakenAlert = () => {
+        console.log("spot taken")
+        let alertDiv = document.createElement('div')
+        alertDiv.classList.add('tileTaken')
+        alertDiv.innerHTML = `
+        <p>Tile already taken.<br>Choose another tile!</p>`
+        boardDiv.appendChild(alertDiv)
+    }
+
     // Add event listener to board
     function clickHandlerBoard(e) {
         const selectedRow = e.target.dataset.row;
@@ -206,8 +227,13 @@ const displayController = (() => {
 
         round = gameController.playRound(selectedRow, selectedColumn);
         // I dont remember what this was gonna do
-        if (!round) {updateScreen()}
-        // else { updateScreen()}
+        if (!round) {updateScreen()
+            // Token placed but no winner
+        } else if (round == "won"){ 
+            // updateScreen()
+        } else if (round == "spot taken") {
+            tileTakenAlert()
+        }
     }
     boardDiv.addEventListener('click', clickHandlerBoard);
 

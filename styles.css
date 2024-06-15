@@ -1,6 +1,13 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
+    --bg-blue: #6a5acd;
 }
+
+@keyframes slideIn {
+    from {height: 0px;}
+    to {height: 100px;}
+}
+
 .board {
     border: 1px solid black;
     border-radius: 8px;
@@ -15,17 +22,34 @@ body {
     border-radius: 8px;
     min-height: 50px;
     margin: 2px;
+    font-size: 24pt;
 }
 
 .gameWon {
     z-index: 2;
     grid-column: 1 / 4;
     grid-row: 1 / 4;
-    background-color: slateblue;
+    background-color: var(--bg-blue);
     color: white;
     text-align: center;
     border-radius: 8px;
     padding: 100px;
+}
+
+.tileTaken {
+    grid-column: 1 / 4;
+    border-radius: 8px;
+    background-color: var(--bg-blue);
+    color: white;
+    text-align: center;
+    font-size: 18pt;
+    animation-name: slideIn;
+    animation-duration: .3s;
+    animation-iteration-count: 1;
+}
+
+.newGame {
+
 }
 
 @media screen and (min-width: 800px) {
