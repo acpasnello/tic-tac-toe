@@ -231,6 +231,22 @@ const displayController = (() => {
             // Token placed but no winner
         } else if (round == "won"){ 
             // updateScreen()
+            // Winner screen should be displayed here, not in gameController
+            const tiles = document.getElementsByClassName('tile');
+            for (var i=0; i < tiles.length; i++){
+                tiles[i].style.display = "none";
+            }
+            let winScreen = document.createElement('div')
+            winScreen.classList.add('gameWon')
+            winScreen.innerHTML = `
+                <p>Winner!! ${winner} wins</p>
+                <button class="newGame">New Game</button>
+            `
+            let boardDiv = document.querySelector('div.board')
+            boardDiv.appendChild(winScreen)
+            // Need some way to reset game
+
+            return "won";
         } else if (round == "spot taken") {
             tileTakenAlert()
         }
