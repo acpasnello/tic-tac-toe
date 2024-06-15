@@ -143,18 +143,21 @@ const gameController = (() => {
                 if (winner) {
                     console.log('winner loop')
                     // End of Game
-                    const tiles = document.getElementsByClassName('tile');
-                    for (var i=0; i < tiles.length; i++){
-                        tiles[i].style.display = "none";
-                    }
-                    let winScreen = document.createElement('div')
-                    winScreen.classList.add('gameWon')
-                    winScreen.innerHTML = `
-                        <p>Winner!! ${winner} wins</p>
-                        <button class="newGame">New Game</button>
-                    `
-                    let boardDiv = document.querySelector('div.board')
-                    boardDiv.appendChild(winScreen)
+
+                    // Moved the following to displayController
+                    // const tiles = document.getElementsByClassName('tile');
+                    // for (var i=0; i < tiles.length; i++){
+                    //     tiles[i].style.display = "none";
+                    // }
+                    // let winScreen = document.createElement('div')
+                    // winScreen.classList.add('gameWon')
+                    // winScreen.innerHTML = `
+                    //     <p>Winner!! ${winner} wins</p>
+                    //     <button class="newGame">New Game</button>
+                    // `
+                    // let boardDiv = document.querySelector('div.board')
+                    // boardDiv.appendChild(winScreen)
+
                     // Need some way to reset game
 
                     return "won";
@@ -218,6 +221,23 @@ const displayController = (() => {
         boardDiv.appendChild(alertDiv)
     }
 
+    const gameWon = () => {
+        const tiles = document.getElementsByClassName('tile');
+        for (var i=0; i < tiles.length; i++){
+            tiles[i].style.display = "none";
+        }
+        let winner = gameController.getActivePlayer();
+        console.log(winner)
+        let winScreen = document.createElement('div')
+        winScreen.classList.add('gameWon')
+        winScreen.innerHTML = `
+            <p>Winner!! ${winner.name} wins</p>
+            <button class="newGame">New Game</button>
+        `
+        let boardDiv = document.querySelector('div.board')
+        boardDiv.appendChild(winScreen)
+    }
+
     // Add event listener to board
     function clickHandlerBoard(e) {
         const selectedRow = e.target.dataset.row;
@@ -232,21 +252,8 @@ const displayController = (() => {
         } else if (round == "won"){ 
             // updateScreen()
             // Winner screen should be displayed here, not in gameController
-            const tiles = document.getElementsByClassName('tile');
-            for (var i=0; i < tiles.length; i++){
-                tiles[i].style.display = "none";
-            }
-            let winScreen = document.createElement('div')
-            winScreen.classList.add('gameWon')
-            winScreen.innerHTML = `
-                <p>Winner!! ${winner} wins</p>
-                <button class="newGame">New Game</button>
-            `
-            let boardDiv = document.querySelector('div.board')
-            boardDiv.appendChild(winScreen)
-            // Need some way to reset game
-
-            return "won";
+            gameWon()
+        
         } else if (round == "spot taken") {
             tileTakenAlert()
         }
