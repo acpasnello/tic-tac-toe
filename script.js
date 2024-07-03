@@ -143,23 +143,6 @@ const gameController = (() => {
                 if (winner) {
                     console.log('winner loop')
                     // End of Game
-
-                    // Moved the following to displayController
-                    // const tiles = document.getElementsByClassName('tile');
-                    // for (var i=0; i < tiles.length; i++){
-                    //     tiles[i].style.display = "none";
-                    // }
-                    // let winScreen = document.createElement('div')
-                    // winScreen.classList.add('gameWon')
-                    // winScreen.innerHTML = `
-                    //     <p>Winner!! ${winner} wins</p>
-                    //     <button class="newGame">New Game</button>
-                    // `
-                    // let boardDiv = document.querySelector('div.board')
-                    // boardDiv.appendChild(winScreen)
-
-                    // Need some way to reset game
-
                     return "won";
                 } else {
                     turn++;
@@ -180,9 +163,10 @@ const gameController = (() => {
         }
     }
 
-    // Reset all tiles 
+    // Reset all tiles and parameters of game
     const newGame = () => {
-
+        turn = 0;
+        winner = false;
     }
 
     return {playRound, getActivePlayer}
