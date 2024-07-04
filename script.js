@@ -173,6 +173,7 @@ const gameController = (() => {
     const newGame = () => {
         turn = 0;
         winner = false;
+        gameboard.resetBoard()
     }
 
     return {playRound, getActivePlayer}
@@ -252,5 +253,3 @@ const displayController = (() => {
 
     updateScreen();
 })();
-
-// displayController();
