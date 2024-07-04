@@ -49,11 +49,17 @@ const gameboard = (() => {
         console.log(boardWithValues)
     }
 
-    const resetGame = () => {
-        
+    const resetBoard = () => {
+        let board = [];
+        for (let i = 0; i < rows; i++) {
+            board[i] = [];
+            for (let j = 0; j < columns; j++) {
+                board[i].push(Cell());
+            }
+        }
     }
 
-    return { getTile, getBoard, placeToken, printBoard };
+    return { getTile, getBoard, placeToken, printBoard, resetBoard };
 })();
 
 // Player factory
