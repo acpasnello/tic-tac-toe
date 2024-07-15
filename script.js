@@ -55,9 +55,10 @@ const gameboard = (() => {
 
     const resetBoard = () => {
         for (let i = 0; i < rows; i++) {
-            board[i] = [];
             for (let j = 0; j < columns; j++) {
-                board[i][j].clearCell();
+                if (board[i][j].getValue() != "") {
+                    board[i][j].clearCell()
+                } else {continue}
             }
         }
     }
@@ -231,9 +232,13 @@ const displayController = (() => {
         let boardDiv = document.querySelector('div.board')
         boardDiv.appendChild(winScreen)
         let newGameButton = document.querySelector('button.newGame')
-        newGameButton.addEventListener('click', gameController.newGame)
+        newGameButton.addEventListener('click', startNewGame)
     }
-
+    
+    const startNewGame = () => {
+        gameController.newGame()
+        updateScreen()
+    }
     // Add event listener to board
     function clickHandlerBoard(e) {
         const selectedRow = e.target.dataset.row;
