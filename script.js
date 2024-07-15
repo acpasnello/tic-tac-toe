@@ -2,7 +2,7 @@
 const gameboard = (() => {
     const rows = 3;
     const columns = 3;
-    let board = [];
+    const board = [];
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
@@ -23,7 +23,11 @@ const gameboard = (() => {
 
         const getValue = () => value;
 
-        return { addToken, getValue, value };
+        const clearCell = () => {
+            value = "";
+        }
+
+        return { addToken, clearCell, getValue, value };
     }
 
     const getTile = (row, col) => {
@@ -50,11 +54,10 @@ const gameboard = (() => {
     }
 
     const resetBoard = () => {
-        let board = [];
         for (let i = 0; i < rows; i++) {
             board[i] = [];
             for (let j = 0; j < columns; j++) {
-                board[i].push(Cell());
+                board[i].clearCell();
             }
         }
     }
@@ -176,7 +179,7 @@ const gameController = (() => {
         gameboard.resetBoard()
     }
 
-    return {playRound, getActivePlayer}
+    return {playRound, getActivePlayer, newGame}
 })();
 
 // DisplayController Module - control the display of the game
@@ -227,6 +230,8 @@ const displayController = (() => {
         `
         let boardDiv = document.querySelector('div.board')
         boardDiv.appendChild(winScreen)
+        let newGameButton = document.querySelector('button.newGame')
+        newGameButton.addEventListener('click', gameController.newGame)
     }
 
     // Add event listener to board
