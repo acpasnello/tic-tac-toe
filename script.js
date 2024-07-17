@@ -194,6 +194,8 @@ const gameController = (() => {
 const displayController = (() => {
     // const game = gameController()
     const boardDiv = document.querySelector(".board")
+    const tiles = document.getElementsByClassName('tile');
+
     const updateScreen = () => {
         // Clear board
         boardDiv.textContent = "";
@@ -230,10 +232,6 @@ const displayController = (() => {
         }
     }
     const gameWon = () => {
-        const tiles = document.getElementsByClassName('tile');
-        for (var i=0; i < tiles.length; i++){
-            tiles[i].style.display = "none";
-        }
         let winner = gameController.getActivePlayer();
         console.log(winner)
         let winScreen = document.createElement('div')
@@ -243,7 +241,8 @@ const displayController = (() => {
             <button class="newGame">New Game</button>
         `
         let boardDiv = document.querySelector('div.board')
-        boardDiv.appendChild(winScreen)
+        updateScreen();
+        boardDiv.insertBefore(winScreen, tiles[0])
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
     }
@@ -252,13 +251,12 @@ const displayController = (() => {
         let drawScreen = document.createElement('div')
         drawScreen.classList.add('gameEnd')
         drawScreen.innerHTML = `
-            <p> Draw!</p>
-            <p> Board full, no more spots to make a line!</p>
+            <p> Draw! Board full, no more spots to make a line!</p>
             <button class="newGame">New Game</button>
         `
 
-        hideTiles();
-        boardDiv.appendChild(drawScreen)
+        updateScreen();
+        boardDiv.insertBefore(drawScreen, tiles[0])
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
     }
