@@ -37,7 +37,7 @@ const gameboard = (() => {
     }
 
     function placeToken(row, col, selection) {
-        console.log("Value: " + board[row][col].getValue())
+        // console.log("Value: " + board[row][col].getValue()) -- Logs "Value: " every time
         if (board[row][col].getValue() == "") {
             board[row][col].addToken(selection);
             console.log('Token placed at ' + row + ', ' + col + '[row, col]')
@@ -99,6 +99,7 @@ const gameController = (() => {
     const getActivePlayer = () => activePlayer;
     
     // Check for rows, diagonals, columns
+    // Is it simpler to check that at least 5 tokens have been placed here?
     const checkForWin = () => {
         let winner = false;
         console.log('checkForWin')
@@ -135,7 +136,6 @@ const gameController = (() => {
                 return winner;
             }
         }
-        console.log('returning winner: ')
         return winner;
     }   
 
@@ -144,9 +144,10 @@ const gameController = (() => {
     const playRound = (row, col) => {
         // Attempt to play tile
         let placed = gameboard.placeToken(row, col, activePlayer.getToken())
+        console.log('turn: ' + turn)
         console.log('placed: ' + placed)
         if (placed) {
-            // Check for line
+            // Check for line - here turn is equal to 1 less than the number of tiles taken
             if (turn > 3) {
                 winner = checkForWin();
                 console.log('playRound, ' + winner)
@@ -155,14 +156,20 @@ const gameController = (() => {
                     // End of Game
                     return "won";
                 } else {
-                    turn++;
-                    // Switch player
-                    _changeActivePlayer();
-                    return false;
+                    if (turn < 8) {
+                        turn++;
+                        console.log('turn: ' + turn)
+                        _changeActivePlayer();
+                        return false;
+                    } else {
+                        // Board full
+                        return 'draw';
+                    }
                 }
             } else {
                 turn++;
                 _changeActivePlayer();
+                console.log('turn: ' + turn)
                 return false;
             }
 
@@ -192,7 +199,7 @@ const displayController = (() => {
         boardDiv.textContent = "";
         // Get current board and player
         const board = gameboard.getBoard();
-        console.log(board)
+        console.log(board) // this prints an empty board to console
         const activePlayer = gameController.getActivePlayer();
         // Render each tile
         for (let i = 0; i < board.length; i++) {
@@ -216,6 +223,12 @@ const displayController = (() => {
         boardDiv.appendChild(alertDiv)
     }
 
+    function hideTiles() {
+        const tiles = document.getElementsByClassName('tile');
+        for (var i=0; i < tiles.length; i++){
+            tiles[i].style.display = "none";
+        }
+    }
     const gameWon = () => {
         const tiles = document.getElementsByClassName('tile');
         for (var i=0; i < tiles.length; i++){
@@ -224,13 +237,28 @@ const displayController = (() => {
         let winner = gameController.getActivePlayer();
         console.log(winner)
         let winScreen = document.createElement('div')
-        winScreen.classList.add('gameWon')
+        winScreen.classList.add('gameEnd')
         winScreen.innerHTML = `
             <p>Winner!! ${winner.name} wins</p>
             <button class="newGame">New Game</button>
         `
         let boardDiv = document.querySelector('div.board')
         boardDiv.appendChild(winScreen)
+        let newGameButton = document.querySelector('button.newGame')
+        newGameButton.addEventListener('click', startNewGame)
+    }
+
+    const gameDrawn = () => {
+        let drawScreen = document.createElement('div')
+        drawScreen.classList.add('gameEnd')
+        drawScreen.innerHTML = `
+            <p> Draw!</p>
+            <p> Board full, no more spots to make a line!</p>
+            <button class="newGame">New Game</button>
+        `
+
+        hideTiles();
+        boardDiv.appendChild(drawScreen)
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
     }
@@ -247,17 +275,14 @@ const displayController = (() => {
         if (!selectedColumn || !selectedRow) return;
 
         round = gameController.playRound(selectedRow, selectedColumn);
-        // I dont remember what this was gonna do
+
         if (!round) {updateScreen()
             // Token placed but no winner
         } else if (round == "won"){ 
-            // updateScreen()
-            // Winner screen should be displayed here, not in gameController
             gameWon()
-        
         } else if (round == "spot taken") {
             tileTakenAlert()
-        }
+        } else if (round == "draw") { gameDrawn() }
     }
     boardDiv.addEventListener('click', clickHandlerBoard);
 
