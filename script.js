@@ -10,7 +10,7 @@ const gameboard = (() => {
             board[i].push(Cell());
         }
     }
-    console.log(board)
+
     const getBoard = () => board;
 
     function Cell() {
@@ -187,12 +187,11 @@ const gameController = (() => {
         gameboard.resetBoard()
     }
 
-    return {playRound, getActivePlayer, newGame}
+    return {playRound, getActivePlayer, newGame, players}
 })();
 
 // DisplayController Module - control the display of the game
 const displayController = (() => {
-    // const game = gameController()
     const boardDiv = document.querySelector(".board")
     const tiles = document.getElementsByClassName('tile');
 
@@ -201,7 +200,7 @@ const displayController = (() => {
         boardDiv.textContent = "";
         // Get current board and player
         const board = gameboard.getBoard();
-        console.log(board) // this prints an empty board to console
+        // console.log(board) // this prints an empty board to console
         const activePlayer = gameController.getActivePlayer();
         // Render each tile
         for (let i = 0; i < board.length; i++) {
@@ -219,7 +218,7 @@ const displayController = (() => {
     const tileTakenAlert = () => {
         console.log("spot taken")
         let alertDiv = document.createElement('div')
-        alertDiv.classList.add('tileTaken')
+        alertDiv.classList.add('bannerBottom')
         alertDiv.innerHTML = `
         <p>Tile already taken.<br>Choose another tile!</p>`
         boardDiv.appendChild(alertDiv)
@@ -231,6 +230,7 @@ const displayController = (() => {
             tiles[i].style.display = "none";
         }
     }
+
     const gameWon = () => {
         let winner = gameController.getActivePlayer();
         console.log(winner)
@@ -240,7 +240,6 @@ const displayController = (() => {
             <p>Winner!! ${winner.name} wins</p>
             <button class="newGame">New Game</button>
         `
-        let boardDiv = document.querySelector('div.board')
         updateScreen();
         boardDiv.insertBefore(winScreen, tiles[0])
         let newGameButton = document.querySelector('button.newGame')
@@ -265,6 +264,7 @@ const displayController = (() => {
         gameController.newGame()
         updateScreen()
     }
+
     // Add event listener to board
     function clickHandlerBoard(e) {
         const selectedRow = e.target.dataset.row;
@@ -284,5 +284,17 @@ const displayController = (() => {
     }
     boardDiv.addEventListener('click', clickHandlerBoard);
 
+    function startScreen() {
+        let startBanner = document.createElement('div')
+        startBanner.innerHTML = `
+            <p>${gameController.players[0].getToken()}: ${gameController.players[0].name} Player 2: ${gameController.players[1].name}</p>
+            <button class="newGame">Start Game</button>
+        `
+        startBanner.classList.add('bannerTop')
+        boardDiv.insertBefore(startBanner, tiles[0])
+        let newGameButton = document.querySelector('button.newGame')
+        newGameButton.addEventListener('click', startNewGame)
+    }
     updateScreen();
+    startScreen();
 })();
