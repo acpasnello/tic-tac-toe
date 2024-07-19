@@ -250,10 +250,6 @@ const displayController = (() => {
         }
     }
 
-    const disableTiles = () => {
-
-    }
-
     const gameWon = () => {
         boardDiv.removeEventListener('click', clickHandlerBoard)
         let winner = gameController.getActivePlayer();
@@ -264,7 +260,7 @@ const displayController = (() => {
             <p>Winner!! ${winner.name} wins</p>
             <button class="newGame">New Game</button>
         `
-        updateScreen();
+        displayBoard();
         boardDiv.insertBefore(winScreen, tiles[0])
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
@@ -278,7 +274,7 @@ const displayController = (() => {
             <p> Draw! Board full, no more spots to make a line!</p>
             <button class="newGame">New Game</button>
         `
-        updateScreen();
+        displayBoard();
         boardDiv.insertBefore(drawScreen, tiles[0])
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
