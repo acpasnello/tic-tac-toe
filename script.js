@@ -269,6 +269,15 @@ const displayController = (() => {
         updateScreen()
     }
 
+    const updateNames = () => {
+        let nameOne = document.querySelector('input#playerOneName').value
+        let nameTwo = document.querySelector('input#playerTwoName').value
+        let newNames = [nameOne, nameTwo]
+        console.log(newNames)
+        gameController.changePlayerNames(newNames)
+        updateScreen();
+        startScreen();
+    }
     // Add event listener to board
     function clickHandlerBoard(e) {
         const selectedRow = e.target.dataset.row;
@@ -299,12 +308,14 @@ const displayController = (() => {
                 <label for="playerTwoName">${playerTwo.getToken().toUpperCase()}:</label>
                 <input type="text" id="playerTwoName" name="playerTwoName" data-currentName="${playerTwo.name}" value="${playerTwo.name}" size=10>
             </p>
-            <input type="button" value="Update Names"><button class="newGame">Start Game</button>
+            <input type="button" id="updateNames" value="Update Names"><button class="newGame">Start Game</button>
         `
         startBanner.classList.add('bannerTop')
         boardDiv.insertBefore(startBanner, tiles[0])
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
+        let updateNamesButton = document.querySelector('input#updateNames')
+        updateNamesButton.addEventListener('click', updateNames)
     }
     updateScreen();
     startScreen();
