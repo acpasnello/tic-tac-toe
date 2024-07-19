@@ -250,7 +250,12 @@ const displayController = (() => {
         }
     }
 
+    const disableTiles = () => {
+
+    }
+
     const gameWon = () => {
+        boardDiv.removeEventListener('click', clickHandlerBoard)
         let winner = gameController.getActivePlayer();
         console.log(winner)
         let winScreen = document.createElement('div')
@@ -281,6 +286,7 @@ const displayController = (() => {
     const startNewGame = () => {
         gameController.newGame()
         updateScreen()
+        boardDiv.addEventListener('click', clickHandlerBoard)
     }
 
     const updateNames = () => {
