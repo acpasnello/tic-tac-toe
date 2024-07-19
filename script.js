@@ -239,6 +239,7 @@ const displayController = (() => {
         alertDiv.classList.add('bannerBottom')
         alertDiv.innerHTML = `
         <p>Tile taken!<br>Choose another tile.</p>`
+        updateScreen();
         boardDiv.appendChild(alertDiv)
     }
 
@@ -271,7 +272,6 @@ const displayController = (() => {
             <p> Draw! Board full, no more spots to make a line!</p>
             <button class="newGame">New Game</button>
         `
-
         updateScreen();
         boardDiv.insertBefore(drawScreen, tiles[0])
         let newGameButton = document.querySelector('button.newGame')
@@ -331,6 +331,6 @@ const displayController = (() => {
         let updateNamesButton = document.querySelector('input#updateNames')
         updateNamesButton.addEventListener('click', updateNames)
     }
-    updateScreen();
+    displayBoard();
     startScreen();
 })();
