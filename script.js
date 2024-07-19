@@ -88,6 +88,11 @@ const gameController = (() => {
     let playerTwo = PlayerFactory("Player Two", "o");
     let players = [playerOne, playerTwo];
 
+    const changePlayerNames = (names) => {
+        playerOne.name = names[0]
+        playerTwo.name = names[1]
+    }
+
     let activePlayer = players[0];
 
     // Function to switch active player
@@ -172,7 +177,6 @@ const gameController = (() => {
                 console.log('turn: ' + turn)
                 return false;
             }
-
              
         } else {
             // Token not placed
@@ -187,7 +191,7 @@ const gameController = (() => {
         gameboard.resetBoard()
     }
 
-    return {playRound, getActivePlayer, newGame, players}
+    return {changePlayerNames, playRound, getActivePlayer, newGame, players}
 })();
 
 // DisplayController Module - control the display of the game
@@ -286,9 +290,16 @@ const displayController = (() => {
 
     function startScreen() {
         let startBanner = document.createElement('div')
+        let playerOne = gameController.players[0]
+        let playerTwo = gameController.players[1]
         startBanner.innerHTML = `
-            <p>${gameController.players[0].getToken()}: ${gameController.players[0].name} Player 2: ${gameController.players[1].name}</p>
-            <button class="newGame">Start Game</button>
+            <p>
+                <label for="playerOneName">${playerOne.getToken().toUpperCase()}:</label>
+                <input type="text" id="playerOneName" name="playerOneName" data-currentName="${playerOne.name}" value="${playerOne.name}" size=10>
+                <label for="playerTwoName">${playerTwo.getToken().toUpperCase()}:</label>
+                <input type="text" id="playerTwoName" name="playerTwoName" data-currentName="${playerTwo.name}" value="${playerTwo.name}" size=10>
+            </p>
+            <input type="button" value="Update Names"><button class="newGame">Start Game</button>
         `
         startBanner.classList.add('bannerTop')
         boardDiv.insertBefore(startBanner, tiles[0])
