@@ -271,6 +271,7 @@ const displayController = (() => {
     }
 
     const gameDrawn = () => {
+        boardDiv.removeEventListener('click', clickHandlerBoard)
         let drawScreen = document.createElement('div')
         drawScreen.classList.add('gameEnd')
         drawScreen.innerHTML = `
