@@ -89,8 +89,12 @@ const gameController = (() => {
     let players = [playerOne, playerTwo];
 
     const changePlayerNames = (names) => {
-        playerOne.name = names[0]
-        playerTwo.name = names[1]
+        if (names[0] != "") {
+            playerOne.name = names[0]
+        }
+        if (names[1] != "") {
+            playerTwo.name = names[1]
+        }
     }
 
     let activePlayer = players[0];
@@ -199,13 +203,12 @@ const displayController = (() => {
     const boardDiv = document.querySelector(".board")
     const tiles = document.getElementsByClassName('tile');
 
-    const updateScreen = () => {
+    const displayBoard = () => {
         // Clear board
         boardDiv.textContent = "";
         // Get current board and player
         const board = gameboard.getBoard();
         // console.log(board) // this prints an empty board to console
-        const activePlayer = gameController.getActivePlayer();
         // Render each tile
         for (let i = 0; i < board.length; i++) {
             for(let j = 0; j < board[i].length; j++) {
@@ -219,12 +222,23 @@ const displayController = (() => {
         }
     }
 
+    const updateScreen = () => {
+        const activePlayer = gameController.getActivePlayer();
+        displayBoard();
+        let activePlayerDisplay = document.createElement('div')
+        activePlayerDisplay.classList.add('bannerBottom')
+        activePlayerDisplay.innerHTML = `
+            <p>${activePlayer.getToken().toUpperCase()} - ${activePlayer.name}'s turn</p>
+        `
+        boardDiv.appendChild(activePlayerDisplay)
+    }
+
     const tileTakenAlert = () => {
         console.log("spot taken")
         let alertDiv = document.createElement('div')
         alertDiv.classList.add('bannerBottom')
         alertDiv.innerHTML = `
-        <p>Tile already taken.<br>Choose another tile!</p>`
+        <p>Tile taken!<br>Choose another tile.</p>`
         boardDiv.appendChild(alertDiv)
     }
 
