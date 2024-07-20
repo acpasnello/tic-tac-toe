@@ -193,6 +193,7 @@ const gameController = (() => {
         turn = 0;
         winner = false;
         gameboard.resetBoard()
+        activePlayer = players[0];
     }
 
     return {changePlayerNames, playRound, getActivePlayer, newGame, players}
@@ -294,6 +295,13 @@ const displayController = (() => {
         boardDiv.addEventListener('click', clickHandlerBoard)
     }
 
+    const restartGame = () => {
+        gameController.newGame();
+        displayBoard();
+        startScreen();
+    }
+    restartButton.addEventListener('click', restartGame)
+
     const updateNames = () => {
         let nameOne = document.querySelector('input#playerOneName').value
         let nameTwo = document.querySelector('input#playerTwoName').value
@@ -337,6 +345,7 @@ const displayController = (() => {
         `
         startBanner.classList.add('bannerTop')
         boardDiv.insertBefore(startBanner, tiles[0])
+        restartButton.classList.add('hidden')
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
         let updateNamesButton = document.querySelector('input#updateNames')
