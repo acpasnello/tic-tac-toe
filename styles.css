@@ -59,8 +59,18 @@ body {
     animation-iteration-count: 1;
 }
 
-.newGame {
+#restartGame {
+    position: absolute;
+    top: 21px;
+    right: 16px;
+    background-color: var(--bg-blue);
+    color: white;
+    border-radius: 8px;
+    padding: 8px 12px;
+}
 
+.hidden {
+    display: none;
 }
 
 @media screen and (min-width: 800px) {

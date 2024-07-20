@@ -202,7 +202,9 @@ const gameController = (() => {
 const displayController = (() => {
     const boardDiv = document.querySelector(".board")
     const tiles = document.getElementsByClassName('tile');
+    const restartButton = document.getElementById("restartGame")
 
+    // Displays the board in its current state only
     const displayBoard = () => {
         // Clear board
         boardDiv.textContent = "";
@@ -222,6 +224,7 @@ const displayController = (() => {
         }
     }
 
+    // Displays board in its current state along with active player's turn. Used when IN a game
     const updateScreen = () => {
         const activePlayer = gameController.getActivePlayer();
         displayBoard();
@@ -231,6 +234,7 @@ const displayController = (() => {
             <p>${activePlayer.getToken().toUpperCase()} - ${activePlayer.name}'s turn</p>
         `
         boardDiv.appendChild(activePlayerDisplay)
+        if (restartButton.classList.contains('hidden')) {restartButton.classList.remove('hidden')}
     }
 
     const tileTakenAlert = () => {
@@ -262,6 +266,7 @@ const displayController = (() => {
         `
         displayBoard();
         boardDiv.insertBefore(winScreen, tiles[0])
+        restartButton.classList.add("hidden")
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
     }
@@ -276,12 +281,15 @@ const displayController = (() => {
         `
         displayBoard();
         boardDiv.insertBefore(drawScreen, tiles[0])
+        restartButton.classList.add("hidden")
+        restartButton.style.backgroundColor = "black"
         let newGameButton = document.querySelector('button.newGame')
         newGameButton.addEventListener('click', startNewGame)
     }
     
     const startNewGame = () => {
         gameController.newGame()
+        restartButton.classList.remove("hidden")
         updateScreen()
         boardDiv.addEventListener('click', clickHandlerBoard)
     }
@@ -292,7 +300,7 @@ const displayController = (() => {
         let newNames = [nameOne, nameTwo]
         console.log(newNames)
         gameController.changePlayerNames(newNames)
-        updateScreen();
+        displayBoard();
         startScreen();
     }
     // Add event listener to board
